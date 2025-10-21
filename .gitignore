@@ -1,0 +1,7 @@
+_upstream_esphome_components/
+.env
+.venv/
+__pycache__/
+.idea/
+.vscode/
+.DS_Store

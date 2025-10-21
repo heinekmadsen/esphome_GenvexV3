@@ -1,0 +1,77 @@
+esphome:
+  name: genvex-controller
+  friendly_name: Genvex Controller
+  platform: ESP32
+  board: esp32dev
+
+logger:
+  level: DEBUG
+
+time:
+  - platform: sntp
+
+wifi:
+  ssid: "<your-ssid>"
+  password: "<your-password>"
+
+api:
+ota:
+
+genvexv2:
+  id: genvex_controller
+
+external_components:
+  - source:
+      type: local
+      path: components
+    components:
+      - genvexv2
+
+uart:
+  - id: uart_genvex
+    rx_pin: GPIO16
+    tx_pin: GPIO17
+    baud_rate: 19200
+    parity: EVEN
+    stop_bits: 1
+
+modbus:
+  - id: genvex_modbus
+    uart_id: uart_genvex
+
+modbus_controller:
+  - id: genvex_modbus_controller
+    address: 1
+    modbus_id: genvex_modbus
+    update_interval: 60s
+    command_throttle: 10ms
+
+number:
+  - platform: template
+    id: genvex_target_temp
+    name: "Genvex Target Temperature"
+    unit_of_measurement: "°C"
+    min_value: 5
+    max_value: 30
+    step: 0.5
+
+  - platform: template
+    id: genvex_fan_speed
+    name: "Genvex Fan Speed"
+    min_value: 0
+    max_value: 4
+    step: 1
+
+sensor:
+  - platform: template
+    id: genvex_current_temp
+    name: "Genvex Current Temperature"
+    unit_of_measurement: "°C"
+
+climate:
+  - platform: genvexv2
+    name: "Genvex"
+    genvexv2_id: genvex_controller
+    target_temp_sensor_id: genvex_target_temp
+    current_temp_sensor_id: genvex_current_temp
+    fan_speed_sensor_id: genvex_fan_speed
