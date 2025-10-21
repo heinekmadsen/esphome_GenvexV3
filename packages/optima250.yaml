@@ -2,7 +2,7 @@ external_components:
   - source: 
       type: git
       url: https://github.com/heinekmadsen/esphome_GenvexV3
-      ref: main
+      ref: master
     refresh: 0s
     components: [genvexv2]
 
