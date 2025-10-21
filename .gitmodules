@@ -1,0 +1,4 @@
+[submodule "vendor/esphome_components"]
+	path = vendor/esphome_components
+	url = https://github.com/heinekmadsen/esphome_components.git
+	branch = main
