@@ -39,66 +39,41 @@ void Genvexv3Climate::control(const climate::ClimateCall& call) {
 
   if (call.get_mode().has_value())
   {
-    ESP_LOGD("TAG", "Mode changed from Home Assistant");
+    ESP_LOGD(TAG, "Mode changed from Home Assistant");
     auto new_mode = *call.get_mode();
     mode = new_mode;
     switch (mode) {
       case climate::CLIMATE_MODE_OFF: 
       {
-        ESP_LOGD("TAG", "Mode changed to OFF");
+        ESP_LOGD(TAG, "Mode changed to OFF");
         this->fan_mode = climate::CLIMATE_FAN_OFF;
-        // The only valid fan mode that is not custom is "OFF"
-        auto new_fan_mode = *call.get_fan_mode();
-        custom_fan_mode.reset();
-
-        ESP_LOGD(TAG, "Custom Fan mode set to: 0");
+        // Map OFF to fan speed 0
         fan_speed_number_->make_call().set_value(0).perform();//set(0);
         break;
       }
       case climate::CLIMATE_MODE_AUTO: 
       {
-        ESP_LOGD("TAG", "Mode changed to AUTO");
-  this->custom_fan_mode = esphome::optional<std::string>("2");
+        ESP_LOGD(TAG, "Mode changed to AUTO");
+        // Default AUTO to speed 2
         fan_mode.reset();
-        auto optional_genvexv3_fan_mode = parse_number<float>("2");
-        if(optional_genvexv3_fan_mode.has_value())
-        {
-          auto genvexv3_fan_mode = optional_genvexv3_fan_mode.value();
-          ESP_LOGD(TAG, "Custom Fan mode set to: %i", static_cast<int>(genvexv3_fan_mode));
-          fan_speed_number_->make_call().set_value(genvexv3_fan_mode).perform();;//set(genvexv3_fan_mode);
-        }
+        fan_speed_number_->make_call().set_value(2).perform();
         break;
       }
       default:
         break;
     }
   }
-
-  if (call.get_fan_mode().has_value())
-  {
-    ESP_LOGD("TAG", "Fan mode changed to OFF from Home Assistant");
-    // The only valid fan mode that is not custom is "OFF"
+  // Map Home Assistant fan mode selections
+  if (call.get_fan_mode().has_value()) {
     auto new_fan_mode = *call.get_fan_mode();
-    custom_fan_mode.reset();
-
-    ESP_LOGD(TAG, "Fan mode set to: 0");
-    fan_speed_number_->make_call().set_value(0).perform();//set(0);
-  }
-
-  if (call.get_custom_fan_mode().has_value())
-  {
-    ESP_LOGD("TAG", "Fan mode changed to custom fan mode 1-4 from Home Assistant");
-    auto new_custom_fan_mode = *call.get_custom_fan_mode();
-    custom_fan_mode = new_custom_fan_mode;
-    fan_mode.reset();
-    auto optional_genvexv3_fan_mode = parse_number<float>(new_custom_fan_mode.c_str());
-    if(optional_genvexv3_fan_mode.has_value())
-    {
-      auto genvexv3_fan_mode = optional_genvexv3_fan_mode.value();
-      ESP_LOGD(TAG, "Custom Fan mode set to: %i", static_cast<int>(genvexv3_fan_mode));
-      fan_speed_number_->make_call().set_value(genvexv3_fan_mode).perform();//set(genvexv3_fan_mode);
+    if (new_fan_mode == climate::ClimateFanMode::CLIMATE_FAN_OFF) {
+      ESP_LOGD(TAG, "Fan mode OFF selected");
+      fan_speed_number_->make_call().set_value(0).perform();
+      this->mode = climate::CLIMATE_MODE_OFF;
+      this->fan_mode = climate::CLIMATE_FAN_OFF;
     }
   }
+
   this->publish_state();
 }
 
@@ -135,43 +110,57 @@ void Genvexv3Climate::dump_config() {
 
 void Genvexv3Climate::genvexv3fanspeed_to_fanmode(const int state)
 {
-  ESP_LOGD("TAG", "In genvexv3fanspeed_to_fanmode");
+  ESP_LOGD(TAG, "In genvexv3fanspeed_to_fanmode");
   climate::ClimateFanMode return_value;
-  ESP_LOGD("TAG", "State is %i", state);
-  this->custom_fan_mode.reset();
+  ESP_LOGD(TAG, "State is %i", state);
   this->fan_mode.reset();
 
   switch (state) {
   case 1:
-    ESP_LOGD("TAG", "Case 1");
+    ESP_LOGD(TAG, "Case 1");
     this->mode = climate::CLIMATE_MODE_AUTO;
-    this->custom_fan_mode = esphome::to_string(state);
     break;
   case 2:
-    ESP_LOGD("TAG", "Case 2");
+    ESP_LOGD(TAG, "Case 2");
     this->mode = climate::CLIMATE_MODE_AUTO;
-    this->custom_fan_mode = esphome::to_string(state);
     break;
   case 3:
-    ESP_LOGD("TAG", "Case 3");
+    ESP_LOGD(TAG, "Case 3");
     this->mode = climate::CLIMATE_MODE_AUTO;
-    this->custom_fan_mode = esphome::to_string(state);
     break;
   case 4:
-    ESP_LOGD("TAG", "Case 4");
+    ESP_LOGD(TAG, "Case 4");
     this->mode = climate::CLIMATE_MODE_AUTO;
-    this->custom_fan_mode = esphome::to_string(state);
     break;
   case 0:
-    ESP_LOGD("TAG", "Case 0");
+    ESP_LOGD(TAG, "Case 0");
     this->fan_mode = climate::CLIMATE_FAN_OFF; 
     this->mode = climate::CLIMATE_MODE_OFF;
     break;
   default: 
-    ESP_LOGD("TAG", "Case default");
+    ESP_LOGD(TAG, "Case default");
     this->fan_mode = climate::CLIMATE_FAN_OFF; 
     this->mode = climate::CLIMATE_MODE_OFF;
     break;
+  }
+}
+
+int Genvexv3Climate::climatemode_to_genvexv3operationmode(const climate::ClimateMode mode) {
+  switch (mode) {
+    case climate::CLIMATE_MODE_OFF:
+      return 0;
+    case climate::CLIMATE_MODE_AUTO:
+      return 2; // default mapping
+    default:
+      return 0;
+  }
+}
+
+void Genvexv3Climate::genvexv3modetext_to_climatemode(const std::string& genvexv3_mode) {
+  if (genvexv3_mode == "OFF") {
+    this->mode = climate::CLIMATE_MODE_OFF;
+  } else {
+    this->mode = climate::CLIMATE_MODE_AUTO;
   }
 }
 
