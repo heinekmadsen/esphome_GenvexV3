@@ -19,9 +19,9 @@ void Genvexv3Select::parse_and_publish(const std::vector<uint8_t> &data) {
 
   const auto &options = this->traits.get_options();
 
-  if(received_value < options.size()) {
-    auto select_value = options[received_value];
-    ESP_LOGD(TAG, "Select new state : %s", select_value.c_str());
+  if (received_value >= 0 && static_cast<size_t>(received_value) < options.size()) {
+    const char *select_value = options[static_cast<size_t>(received_value)];
+    ESP_LOGD(TAG, "Select new state : %s", select_value);
     this->publish_state(select_value);
   }
 }
@@ -31,8 +31,8 @@ void Genvexv3Select::control(const std::string &value) {
 
   const auto &options = this->traits.get_options();
 
-  for(auto i = 0; i<options.size(); ++i) {
-    if(options[i] == value) {
+  for (size_t i = 0; i < options.size(); ++i) {
+    if (options[i] == value) {
       ESP_LOGD(TAG, "WRITING INDEX: %d", i);
       std::vector<uint16_t> data = modbus_controller::float_to_payload(i, modbus_controller::SensorValueType::U_WORD);
       uint16_t speed = i;
