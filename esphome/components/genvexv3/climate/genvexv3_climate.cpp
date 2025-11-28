@@ -96,7 +96,6 @@ climate::ClimateTraits Genvexv3Climate::traits() {
     climate::ClimateMode::CLIMATE_MODE_AUTO,
    });
 
-  traits.add_feature_flags(climate::CLIMATE_SUPPORTS_TARGET_TEMPERATURE);
 
   traits.add_feature_flags(climate::CLIMATE_SUPPORTS_CURRENT_TEMPERATURE);
   traits.set_visual_temperature_step(0.1);
