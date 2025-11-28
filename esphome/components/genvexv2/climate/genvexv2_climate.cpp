@@ -1,9 +1,10 @@
 #include "genvexv2_climate.h"
+#include "genvexv3_climate.h"
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
 
 namespace esphome {
-namespace genvexv2 {
+namespace genvexv3 {
 static const char *TAG = "genvexv2.climate";
 
 void Genvexv2Climate::setup() {
@@ -19,7 +20,7 @@ void Genvexv2Climate::setup() {
   });
   fan_speed_number_->add_on_state_callback([this](float state) {
     ESP_LOGD(TAG, "FAN SPEED SENSOR CALLBACK: %f", state);
-    genvexv2fanspeed_to_fanmode(state);
+    genvexv3fanspeed_to_fanmode(state);
     publish_state();
   });
 
@@ -28,7 +29,7 @@ void Genvexv2Climate::setup() {
   genvexv2fanspeed_to_fanmode(fan_speed_number_->state);
 }
 
-void Genvexv2Climate::control(const climate::ClimateCall& call) {
+void Genvexv3Climate::control(const climate::ClimateCall& call) {
   if (call.get_target_temperature().has_value())
   {
     this->target_temperature = *call.get_target_temperature();
@@ -91,18 +92,18 @@ void Genvexv2Climate::control(const climate::ClimateCall& call) {
     auto new_custom_fan_mode = *call.get_custom_fan_mode();
     custom_fan_mode = new_custom_fan_mode;
     fan_mode.reset();
-    auto optional_genvexv2_fan_mode = parse_number<float>(new_custom_fan_mode.c_str());
-    if(optional_genvexv2_fan_mode.has_value())
+    auto optional_genvexv3_fan_mode = parse_number<float>(new_custom_fan_mode.c_str());
+    if(optional_genvexv3_fan_mode.has_value())
     {
-      auto genvexv2_fan_mode = optional_genvexv2_fan_mode.value();
-      ESP_LOGD(TAG, "Custom Fan mode set to: %i", static_cast<int>(genvexv2_fan_mode));
-      fan_speed_number_->make_call().set_value(genvexv2_fan_mode).perform();//set(genvexv2_fan_mode);
+      auto genvexv3_fan_mode = optional_genvexv3_fan_mode.value();
+      ESP_LOGD(TAG, "Custom Fan mode set to: %i", static_cast<int>(genvexv3_fan_mode));
+      fan_speed_number_->make_call().set_value(genvexv3_fan_mode).perform();//set(genvexv3_fan_mode);
     }
   }
   this->publish_state();
 }
 
-climate::ClimateTraits Genvexv2Climate::traits() {
+climate::ClimateTraits Genvexv3Climate::traits() {
   auto traits = climate::ClimateTraits();
 
   traits.set_supported_custom_fan_modes({
@@ -129,13 +130,13 @@ climate::ClimateTraits Genvexv2Climate::traits() {
   return traits;
 }
 
-void Genvexv2Climate::dump_config() {
-  LOG_CLIMATE("", "Genvexv2 Climate", this);
+void Genvexv3Climate::dump_config() {
+  LOG_CLIMATE("", "Genvexv3 Climate", this);
 }
 
-void Genvexv2Climate::genvexv2fanspeed_to_fanmode(const int state)
+void Genvexv3Climate::genvexv3fanspeed_to_fanmode(const int state)
 {
-  ESP_LOGD("TAG", "In genvexv2fanspeed_to_fanmode");
+  ESP_LOGD("TAG", "In genvexv3fanspeed_to_fanmode");
   climate::ClimateFanMode return_value;
   ESP_LOGD("TAG", "State is %i", state);
   this->custom_fan_mode.reset();
@@ -175,5 +176,5 @@ void Genvexv2Climate::genvexv2fanspeed_to_fanmode(const int state)
   }
 }
 
-} // namespace genvexv2
+} // namespace genvexv3
 } // namespace esphome

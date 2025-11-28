@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import climate, sensor, select, number
-from .. import Genvexv2, CONF_GENVEXV2_ID
+from .. import Genvexv2, CONF_genvexv3_ID
 from esphome.const import (
     CONF_ID
 )
@@ -11,7 +11,7 @@ CONF_CURRENT_TEMP = "current_temp_sensor_id"
 CONF_FAN_SPEED = "fan_speed_sensor_id"
 #CONF_MODE = "mode_select_id"
 
-genvexv2_ns = cg.esphome_ns.namespace('genvexv2')
+genvexv2_ns = cg.esphome_ns.namespace('genvexv3')
 Genvexv2Climate = genvexv2_ns.class_('Genvexv2Climate', climate.Climate, cg.Component)
  
 CONFIG_SCHEMA = climate.climate_schema(Genvexv2Climate).extend({
