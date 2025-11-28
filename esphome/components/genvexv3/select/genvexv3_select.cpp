@@ -17,7 +17,7 @@ void Genvexv3Select::parse_and_publish(const std::vector<uint8_t> &data) {
   float received_value = payload_to_float(data, *this);
   ESP_LOGD(TAG, "Genvexv3 Select index: %f", received_value);
 
-  auto options = traits.get_options();
+  const auto &options = this->traits.get_options();
 
   if(received_value < options.size()) {
     auto select_value = options[received_value];
@@ -29,7 +29,7 @@ void Genvexv3Select::parse_and_publish(const std::vector<uint8_t> &data) {
 void Genvexv3Select::control(const std::string &value) {
   ESP_LOGD(TAG, "Genvexv3 Select state: %s", value.c_str());
 
-  auto options = traits.get_options();
+  const auto &options = this->traits.get_options();
 
   for(auto i = 0; i<options.size(); ++i) {
     if(options[i] == value) {
