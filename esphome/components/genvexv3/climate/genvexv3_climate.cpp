@@ -1,13 +1,12 @@
-#include "genvexv2_climate.h"
 #include "genvexv3_climate.h"
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
 
 namespace esphome {
 namespace genvexv3 {
-static const char *TAG = "genvexv2.climate";
+static const char *TAG = "genvexv3.climate";
 
-void Genvexv2Climate::setup() {
+void Genvexv3Climate::setup() {
   current_temp_sensor_->add_on_state_callback([this](float state) {
     ESP_LOGD(TAG, "CURRENT TEMP SENSOR CALLBACK: %f", state);
     current_temperature = state;

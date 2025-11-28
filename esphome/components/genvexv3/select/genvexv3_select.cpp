@@ -1,10 +1,9 @@
-#include "genvexv2_select.h"
+#include "genvexv3_select.h"
 #include "esphome/core/log.h"
 
 namespace esphome {
-namespace genvexv2 {
-
-static const char *TAG = "genvexv2.select";
+namespace genvexv3 {
+static const char *TAG = "genvexv3.select";
 
 using modbus_controller::ModbusCommandItem;
 using modbus_controller::ModbusRegisterType;
@@ -53,5 +52,5 @@ void Genvexv2Select::control(const std::string &value) {
   }
 }
 
-} // namespace genvexv2
+} // namespace genvexv3
 } // namespace esphome

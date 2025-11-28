@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import climate, sensor, select, number
-from .. import Genvexv2, CONF_genvexv3_ID
+from .. import Genvexv3, CONF_genvexv3_ID
 from esphome.const import (
     CONF_ID
 )

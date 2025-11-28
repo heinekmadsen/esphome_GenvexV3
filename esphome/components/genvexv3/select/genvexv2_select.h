@@ -35,5 +35,5 @@ protected:
 
   void control(const std::string &value) override;
 };
-} // namespace genvexv2
+} // namespace genvexv3
 } // namespace esphome
