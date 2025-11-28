@@ -16,7 +16,7 @@ Genvexv2Climate = genvexv2_ns.class_('Genvexv2Climate', climate.Climate, cg.Comp
  
 CONFIG_SCHEMA = climate.climate_schema(Genvexv2Climate).extend({
     cv.GenerateID(): cv.declare_id(Genvexv2Climate),
-    cv.GenerateID(CONF_GENVEXV2_ID): cv.use_id(Genvexv2),
+    cv.GenerateID(CONF_GENVEXV3_ID): cv.use_id(Genvexv3),
     cv.Required(CONF_TARGET_TEMP): cv.use_id(number.Number),
     cv.Required(CONF_CURRENT_TEMP): cv.use_id(sensor.Sensor),
     cv.Required(CONF_FAN_SPEED): cv.use_id(number.Number),
