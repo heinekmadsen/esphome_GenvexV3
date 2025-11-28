@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import select, modbus_controller
-from .. import Genvexv3, CONF_GENVEXV3_ID
+from .. import Genvexv3, CONF_genvexv3_ID
 
 from esphome.components.modbus_controller import (
     CONF_MODBUS_CONTROLLER_ID,
@@ -27,7 +27,7 @@ Genvexv3Select = genvexv3_ns.class_('Genvexv3Select', select.Select, cg.Componen
  
 CONFIG_SCHEMA = select.select_schema(Genvexv3Select).extend({
     cv.GenerateID(): cv.declare_id(Genvexv3Select),
-    cv.GenerateID(CONF_GENVEXV3_ID): cv.use_id(Genvexv3),
+    cv.GenerateID(CONF_genvexv3_ID): cv.use_id(Genvexv3),
     cv.Required(CONF_ADDRESS): cv.positive_int,
     cv.Required(CONF_MODBUS_CONTROLLER_ID): cv.use_id(modbus_controller.ModbusController),
     cv.Required(CONF_OPTIONS): cv.All(cv.ensure_list(cv.string_strict), cv.Length(min=1)),
