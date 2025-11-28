@@ -7,8 +7,8 @@
 #include "esphome/components/select/select.h"
 
 namespace esphome {
-namespace genvexv2 {
-class Genvexv2Climate : public climate::Climate, public Component {
+namespace genvexv3 {
+class Genvexv3Climate : public climate::Climate, public Component {
 public:
 
   Genvexv2Climate() {}
@@ -53,9 +53,9 @@ protected:
 
 private:
 
-  void genvexv2fanspeed_to_fanmode(const int state);
-  int climatemode_to_genvexv2operationmode(const climate::ClimateMode mode);
-  void genvexv2modetext_to_climatemode(const std::string& genvexv2_mode);
+  void genvexv3fanspeed_to_fanmode(const int state);
+  int climatemode_to_genvexv3operationmode(const climate::ClimateMode mode);
+  void genvexv3modetext_to_climatemode(const std::string& genvexv3_mode);
 };
-} // namespace genvexv2
+} // namespace genvexv3
 } // namespace esphome

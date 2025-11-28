@@ -4,12 +4,12 @@ external_components:
       url: https://github.com/heinekmadsen/esphome_GenvexV3
       ref: master
     refresh: 0s
-    components: [genvexv2]
+    components: [genvexv3]
 
-genvexv2:
+genvexv3:
 
 select:
-  - platform: genvexv2
+  - platform: genvexv3
     modbus_controller_id: genvex_modbus_controller
     name: "Genvex speed mode"
     id: genvex_speed_mode    
@@ -21,7 +21,7 @@ select:
       - "3"
       - "4"
       
-  - platform: genvexv2
+  - platform: genvexv3
     modbus_controller_id: genvex_modbus_controller
     name: "Genvex timer"
     id: genvex_timer    
@@ -375,7 +375,7 @@ binary_sensor:
     name: "Genvex Controller Status"
 
 climate:
-  - platform: genvexv2
+  - platform: genvexv3
     name: Genvex
     current_temp_sensor_id: genvex_temp_t7
     target_temp_sensor_id: genvex_target_temp

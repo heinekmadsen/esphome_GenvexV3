@@ -3,11 +3,11 @@
 #include "esphome/core/component.h"
 
 namespace esphome {
-namespace genvexv2 {
+namespace genvexv3 {
 
-class Genvexv2 : public Component {
+class Genvexv3 : public Component {
   public:
-    Genvexv2() {}
+    Genvexv3() {}
 };
-} // namespace genvex
+} // namespace genvexv3
 } // namespace esphome
