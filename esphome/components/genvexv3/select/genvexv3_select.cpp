@@ -8,14 +8,14 @@ static const char *TAG = "genvexv3.select";
 using modbus_controller::ModbusCommandItem;
 using modbus_controller::ModbusRegisterType;
 
-void Genvexv2Select::parse_and_publish(const std::vector<uint8_t> &data) {
+void Genvexv3Select::parse_and_publish(const std::vector<uint8_t> &data) {
   union {
     float float_value;
     uint32_t raw;
   } raw_to_float;
 
   float received_value = payload_to_float(data, *this);
-  ESP_LOGD(TAG, "Genvexv2 Select index: %f", received_value);
+  ESP_LOGD(TAG, "Genvexv3 Select index: %f", received_value);
 
   auto options = traits.get_options();
 
@@ -26,8 +26,8 @@ void Genvexv2Select::parse_and_publish(const std::vector<uint8_t> &data) {
   }
 }
 
-void Genvexv2Select::control(const std::string &value) {
-  ESP_LOGD(TAG, "Genvexv2 Select state: %s", value.c_str());
+void Genvexv3Select::control(const std::string &value) {
+  ESP_LOGD(TAG, "Genvexv3 Select state: %s", value.c_str());
 
   auto options = traits.get_options();
 

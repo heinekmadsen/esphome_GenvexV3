@@ -25,7 +25,7 @@ void Genvexv3Climate::setup() {
 
   current_temperature = current_temp_sensor_->state;
   target_temperature  = temp_setpoint_number_->state;
-  genvexv2fanspeed_to_fanmode(fan_speed_number_->state);
+  genvexv3fanspeed_to_fanmode(fan_speed_number_->state);
 }
 
 void Genvexv3Climate::control(const climate::ClimateCall& call) {
@@ -60,12 +60,12 @@ void Genvexv3Climate::control(const climate::ClimateCall& call) {
         ESP_LOGD("TAG", "Mode changed to AUTO");
   this->custom_fan_mode = esphome::optional<std::string>("2");
         fan_mode.reset();
-        auto optional_genvexv2_fan_mode = parse_number<float>("2");
-        if(optional_genvexv2_fan_mode.has_value())
+        auto optional_genvexv3_fan_mode = parse_number<float>("2");
+        if(optional_genvexv3_fan_mode.has_value())
         {
-          auto genvexv2_fan_mode = optional_genvexv2_fan_mode.value();
-          ESP_LOGD(TAG, "Custom Fan mode set to: %i", static_cast<int>(genvexv2_fan_mode));
-          fan_speed_number_->make_call().set_value(genvexv2_fan_mode).perform();;//set(genvexv2_fan_mode);
+          auto genvexv3_fan_mode = optional_genvexv3_fan_mode.value();
+          ESP_LOGD(TAG, "Custom Fan mode set to: %i", static_cast<int>(genvexv3_fan_mode));
+          fan_speed_number_->make_call().set_value(genvexv3_fan_mode).perform();;//set(genvexv3_fan_mode);
         }
         break;
       }

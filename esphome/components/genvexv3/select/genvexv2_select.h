@@ -5,16 +5,16 @@
 #include "esphome/components/modbus_controller/modbus_controller.h"
 
 namespace esphome {
-namespace genvexv2 {
+namespace genvexv3 {
 
 using modbus_controller::ModbusController;
 using modbus_controller::SensorItem;
 using modbus_controller::SensorValueType;
 using modbus_controller::ModbusRegisterType;
 
-class Genvexv2Select : public select::Select, public Component, public SensorItem {
+class Genvexv3Select : public select::Select, public Component, public SensorItem {
 public:
-  Genvexv2Select(uint16_t start_address, uint8_t offset, uint32_t bitmask, SensorValueType value_type, 
+  Genvexv3Select(uint16_t start_address, uint8_t offset, uint32_t bitmask, SensorValueType value_type, 
               int register_count, uint8_t skip_updates, bool force_new_range)
       : select::Select(), Component(), SensorItem() {
     this->register_type = ModbusRegisterType::HOLDING;

@@ -11,7 +11,7 @@ namespace genvexv3 {
 class Genvexv3Climate : public climate::Climate, public Component {
 public:
 
-  Genvexv2Climate() {}
+  Genvexv3Climate() {}
 
   void setup() override;
   void dump_config() override;
