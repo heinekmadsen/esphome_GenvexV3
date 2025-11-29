@@ -51,9 +51,10 @@ void Genvexv3Climate::control(const climate::ClimateCall& call) {
         fan_speed_number_->make_call().set_value(0).perform();//set(0);
         break;
       }
+      case climate::CLIMATE_MODE_HEAT:
       case climate::CLIMATE_MODE_AUTO: 
       {
-        ESP_LOGD(TAG, "Mode changed to AUTO");
+        ESP_LOGD(TAG, "Mode changed to AUTO/HEAT");
         // Default AUTO to speed 2
         fan_mode.reset();
         fan_speed_number_->make_call().set_value(2).perform();
@@ -94,6 +95,7 @@ climate::ClimateTraits Genvexv3Climate::traits() {
   traits.set_supported_modes({
     climate::ClimateMode::CLIMATE_MODE_OFF,
     climate::ClimateMode::CLIMATE_MODE_AUTO,
+    climate::ClimateMode::CLIMATE_MODE_HEAT,
    });
 
 
