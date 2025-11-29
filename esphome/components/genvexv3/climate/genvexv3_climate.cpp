@@ -15,8 +15,13 @@ void Genvexv3Climate::setup() {
   });
   temp_setpoint_number_->add_on_state_callback([this](float state) {
     ESP_LOGD(TAG, "TEMP SETPOINT SENSOR CALLBACK: %f", state);
-    target_temperature = state;
-    publish_state();
+    // Only accept valid numeric setpoints in expected range
+    if (!std::isnan(state) && state >= 5.0f && state <= 30.0f) {
+      target_temperature = state;
+      publish_state();
+    } else {
+      ESP_LOGW(TAG, "Ignoring invalid target temp state: %f", state);
+    }
   });
   fan_speed_number_->add_on_state_callback([this](float state) {
     ESP_LOGD(TAG, "FAN SPEED SENSOR CALLBACK: %f", state);
@@ -107,7 +112,10 @@ climate::ClimateTraits Genvexv3Climate::traits() {
    });
 
 
-  traits.add_feature_flags(climate::CLIMATE_SUPPORTS_CURRENT_TEMPERATURE);
+  // Use legacy API to ensure HA UI exposes both current and target temperature
+  traits.set_supports_current_temperature(true);
+  traits.set_supports_two_point_target_temperature(false);
+  traits.set_supports_action(true);
   // Ensure single setpoint rather than two-point target
   traits.set_supports_two_point_target_temperature(false);
   traits.set_supports_action(true);
