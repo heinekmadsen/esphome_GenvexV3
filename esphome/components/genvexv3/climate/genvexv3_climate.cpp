@@ -178,5 +178,18 @@ void Genvexv3Climate::genvexv3modetext_to_climatemode(const std::string& genvexv
   }
 }
 
+void Genvexv3Climate::loop() {
+  // Initialize target temperature once real Modbus value arrives (avoid null temperature in HA)
+  if (!this->target_initialized_ && this->temp_setpoint_number_ != nullptr) {
+    float raw = this->temp_setpoint_number_->state;
+    if (!std::isnan(raw) && raw >= 5 && raw <= 30) {
+      this->target_temperature = raw;
+      this->target_initialized_ = true;
+      ESP_LOGD(TAG, "Loop init target temperature: %f", raw);
+      this->publish_state();
+    }
+  }
+}
+
 } // namespace genvexv3
 } // namespace esphome

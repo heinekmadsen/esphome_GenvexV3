@@ -56,6 +56,9 @@ private:
   void genvexv3fanspeed_to_fanmode(const int state);
   int climatemode_to_genvexv3operationmode(const climate::ClimateMode mode);
   void genvexv3modetext_to_climatemode(const std::string& genvexv3_mode);
+  bool target_initialized_{false};
+
+  void loop() override;
 };
 } // namespace genvexv3
 } // namespace esphome
