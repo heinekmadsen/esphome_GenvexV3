@@ -1,6 +1,7 @@
 #include "genvexv3_climate.h"
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
+#include <cmath>
 
 namespace esphome {
 namespace genvexv3 {
@@ -24,8 +25,15 @@ void Genvexv3Climate::setup() {
   });
 
   current_temperature = current_temp_sensor_->state;
-  target_temperature  = temp_setpoint_number_->state;
+  float initial_target = temp_setpoint_number_->state;
+  if (std::isnan(initial_target) || initial_target < 5 || initial_target > 30) {
+    // Provide a sane default so HA sees a non-null temperature immediately
+    initial_target = 21.0f;
+  }
+  target_temperature = initial_target;
   genvexv3fanspeed_to_fanmode(fan_speed_number_->state);
+  // Publish an initial state so HA receives target_temperature early
+  publish_state();
 }
 
 void Genvexv3Climate::control(const climate::ClimateCall& call) {
