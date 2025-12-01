@@ -13,17 +13,29 @@ GenvexTimerSelect = ns.class_("GenvexTimerSelect", select.Select, cg.Component)
 CONFIG_SCHEMA = select.select_schema(GenvexSpeedSelect).extend({
     cv.GenerateID(): cv.declare_id(GenvexSpeedSelect),
     cv.GenerateID("genvex_id"): cv.use_id(Genvex),
-    cv.Required(CONF_SPEED_NUMBER): cv.use_id(number.Number),
+    cv.Optional(CONF_SPEED_NUMBER): cv.use_id(number.Number),
+    cv.Optional(CONF_TIMER_NUMBER): cv.use_id(number.Number),
     cv.Required("options"): cv.ensure_list(cv.string),
 }).extend(cv.COMPONENT_SCHEMA)
 
 def to_code(config):
     var = cg.new_Pvariable(config[cv.CONF_ID])
     yield cg.register_component(var, config)
-    yield select.register_select(var, config)
+    # register_select requires options passed explicitly
+    yield select.register_select(var, options=config["options"]) 
 
-    speed_num = yield cg.get_variable(config[CONF_SPEED_NUMBER])
-    cg.add(var.set_speed_number(speed_num))
+    # Validate exactly one of speed or timer provided
+    has_speed = CONF_SPEED_NUMBER in config
+    has_timer = CONF_TIMER_NUMBER in config
+    if has_speed == has_timer:
+        raise cv.Invalid("Provide exactly one of speed_number_id or timer_number_id")
+
+    if has_speed:
+        speed_num = yield cg.get_variable(config[CONF_SPEED_NUMBER])
+        cg.add(var.set_speed_number(speed_num))
+    else:
+        timer_num = yield cg.get_variable(config[CONF_TIMER_NUMBER])
+        cg.add(var.set_timer_number(timer_num))
 
 # Separate schema for timer select
 TIMER_CONFIG_SCHEMA = select.select_schema(GenvexTimerSelect).extend({
@@ -34,9 +46,5 @@ TIMER_CONFIG_SCHEMA = select.select_schema(GenvexTimerSelect).extend({
 }).extend(cv.COMPONENT_SCHEMA)
 
 def timer_to_code(config):
-    var = cg.new_Pvariable(config[cv.CONF_ID])
-    yield cg.register_component(var, config)
-    yield select.register_select(var, config)
-
-    timer_num = yield cg.get_variable(config[CONF_TIMER_NUMBER])
-    cg.add(var.set_timer_number(timer_num))
+    # Deprecated path; unified to_code handles both speed/timer.
+    return to_code(config)

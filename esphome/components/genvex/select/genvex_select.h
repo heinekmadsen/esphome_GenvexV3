@@ -15,11 +15,13 @@ public:
   void dump_config() override;
 
   void set_speed_number(number::Number *number) { this->speed_number_ = number; }
+  void set_timer_number(number::Number *number) { this->timer_number_ = number; }
 
 protected:
   void control(const std::string &value) override;
 
   number::Number *speed_number_{nullptr};
+  number::Number *timer_number_{nullptr};
 };
 
 }  // namespace genvex
