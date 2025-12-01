@@ -26,8 +26,7 @@ void GenvexClimate::setup() {
       if (state <= 0.5f) {
         this->fan_mode = climate::CLIMATE_FAN_OFF;
       } else {
-        // Represent fan speed as a custom fan state string
-        this->custom_fan_mode = esphome::to_string(static_cast<int>(state));
+        // Non-zero speed: no standard fan mode available; leave fan mode unset
         this->fan_mode.reset();
       }
       this->publish_state();
@@ -51,24 +50,6 @@ void GenvexClimate::control(const climate::ClimateCall& call) {
     if (fm == climate::CLIMATE_FAN_OFF) {
       fan_speed_number_->make_call().set_value(0.0f).perform();
       this->fan_mode = climate::CLIMATE_FAN_OFF;
-      this->custom_fan_mode.reset();
-    }
-  }
-  if (call.get_custom_fan_mode().has_value() && fan_speed_number_ != nullptr) {
-    auto cfm = *call.get_custom_fan_mode();
-    // Expect values "1".."4"
-    int speed = 0;
-    if (!cfm.empty()) {
-      speed = atoi(cfm.c_str());
-    }
-    speed = (speed < 0) ? 0 : (speed > 4 ? 4 : speed);
-    fan_speed_number_->make_call().set_value(static_cast<float>(speed)).perform();
-    if (speed == 0) {
-      this->fan_mode = climate::CLIMATE_FAN_OFF;
-      this->custom_fan_mode.reset();
-    } else {
-      this->custom_fan_mode = esphome::to_string(speed);
-      this->fan_mode.reset();
     }
   }
   this->publish_state();
@@ -80,7 +61,6 @@ climate::ClimateTraits GenvexClimate::traits() {
     climate::ClimateMode::CLIMATE_MODE_OFF,
     climate::ClimateMode::CLIMATE_MODE_HEAT,
   });
-  traits.set_supported_custom_fan_modes({"1", "2", "3", "4"});
   traits.set_supported_fan_modes({climate::CLIMATE_FAN_OFF});
   traits.set_visual_temperature_step(0.1f);
   traits.set_visual_min_temperature(5.0f);
