@@ -21,8 +21,8 @@ CONFIG_SCHEMA = select.select_schema(GenvexSpeedSelect).extend({
 def to_code(config):
     var = cg.new_Pvariable(config[cv.CONF_ID])
     yield cg.register_component(var, config)
-    # register_select requires options passed explicitly
-    yield select.register_select(var, options=config["options"]) 
+    # register_select requires the full config and options explicitly
+    yield select.register_select(var, config, options=config["options"]) 
 
     # Validate exactly one of speed or timer provided
     has_speed = CONF_SPEED_NUMBER in config
