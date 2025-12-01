@@ -11,7 +11,6 @@ GenvexSpeedSelect = ns.class_("GenvexSpeedSelect", select.Select, cg.Component)
 
 CONFIG_SCHEMA = select.select_schema(GenvexSpeedSelect).extend({
     cv.GenerateID(): cv.declare_id(GenvexSpeedSelect),
-    cv.GenerateID("genvex_id"): cv.use_id(Genvex),
     cv.Optional(CONF_SPEED_NUMBER): cv.use_id(number.Number),
     cv.Optional(CONF_TIMER_NUMBER): cv.use_id(number.Number),
     cv.Required("options"): cv.ensure_list(cv.string),

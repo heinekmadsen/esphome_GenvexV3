@@ -13,7 +13,6 @@ GenvexClimate = ns.class_("GenvexClimate", climate.Climate, cg.Component)
 
 CONFIG_SCHEMA = climate.climate_schema(GenvexClimate).extend({
     cv.GenerateID(): cv.declare_id(GenvexClimate),
-    cv.GenerateID("genvex_id"): cv.use_id(Genvex),
     cv.Required(CONF_TARGET_TEMP): cv.use_id(number.Number),
     cv.Required(CONF_CURRENT_TEMP): cv.use_id(sensor.Sensor),
     cv.Optional(CONF_FAN_SPEED): cv.use_id(number.Number),
