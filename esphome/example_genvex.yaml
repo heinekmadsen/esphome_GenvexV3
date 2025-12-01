@@ -40,9 +40,85 @@ sensor:
     address: 6
     lambda: "return ((x - 300) / 10);"
 
+  # Additional sensors from Modbus documentation
+  - platform: modbus_controller
+    modbus_controller_id: genvex_modbus_controller
+    name: "Genvex Bypass"
+    id: genvex_bypass
+    unit_of_measurement: "%"
+    value_type: U_WORD
+    register_type: read
+    address: 104
+
+  - platform: modbus_controller
+    modbus_controller_id: genvex_modbus_controller
+    name: "Genvex Water Valve"
+    id: genvex_water_valve
+    unit_of_measurement: "%"
+    value_type: U_WORD
+    register_type: read
+    address: 105
+
+  - platform: modbus_controller
+    modbus_controller_id: genvex_modbus_controller
+    name: "Genvex Humidity Fan Control"
+    id: genvex_humidity_fan_control
+    unit_of_measurement: "%"
+    value_type: U_WORD
+    register_type: read
+    address: 106
+
 climate:
   - platform: genvex
     name: Genvex
     genvex_id: my_genvex
     current_temp_sensor_id: genvex_current_temp
     target_temp_number_id: genvex_target_temp
+    fan_speed_number_id: genvex_ventilation_speed
+
+select:
+  - platform: genvex
+    name: "Genvex Speed Mode"
+    genvex_id: my_genvex
+    speed_number_id: genvex_ventilation_speed
+    options:
+      - "Off"
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+
+  - platform: genvex
+    name: "Genvex Timer"
+    genvex_id: my_genvex
+    timer_number_id: genvex_timer_number
+    options:
+      - "Off"
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "6"
+      - "7"
+      - "8"
+      - "9"
+
+number:
+  - platform: modbus_controller
+    modbus_controller_id: genvex_modbus_controller
+    name: "Genvex Ventilation speed"
+    id: genvex_ventilation_speed
+    min_value: 0
+    max_value: 4
+    step: 1.0
+    address: 100
+
+  - platform: modbus_controller
+    modbus_controller_id: genvex_modbus_controller
+    name: "Genvex Timer"
+    id: genvex_timer_number
+    min_value: 0
+    max_value: 9
+    step: 1.0
+    address: 106

@@ -16,6 +16,7 @@ public:
 
   void set_current_temp_sensor(sensor::Sensor *sensor) { this->current_temp_sensor_ = sensor; }
   void set_temp_setpoint_number(number::Number *number) { this->temp_setpoint_number_ = number; }
+  void set_fan_speed_number(number::Number *number) { this->fan_speed_number_ = number; }
 
 protected:
   void control(const climate::ClimateCall& call) override;
@@ -23,6 +24,7 @@ protected:
 
   sensor::Sensor *current_temp_sensor_{ nullptr };
   number::Number *temp_setpoint_number_{ nullptr };
+  number::Number *fan_speed_number_{ nullptr };
 };
 }  // namespace genvex
 }  // namespace esphome
