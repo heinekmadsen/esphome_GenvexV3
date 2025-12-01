@@ -8,7 +8,6 @@ CONF_TIMER_NUMBER = "timer_number_id"
 
 ns = cg.esphome_ns.namespace("genvex")
 GenvexSpeedSelect = ns.class_("GenvexSpeedSelect", select.Select, cg.Component)
-GenvexTimerSelect = ns.class_("GenvexTimerSelect", select.Select, cg.Component)
 
 CONFIG_SCHEMA = select.select_schema(GenvexSpeedSelect).extend({
     cv.GenerateID(): cv.declare_id(GenvexSpeedSelect),
@@ -37,14 +36,4 @@ def to_code(config):
         timer_num = yield cg.get_variable(config[CONF_TIMER_NUMBER])
         cg.add(var.set_timer_number(timer_num))
 
-# Separate schema for timer select
-TIMER_CONFIG_SCHEMA = select.select_schema(GenvexTimerSelect).extend({
-    cv.GenerateID(): cv.declare_id(GenvexTimerSelect),
-    cv.GenerateID("genvex_id"): cv.use_id(Genvex),
-    cv.Required(CONF_TIMER_NUMBER): cv.use_id(number.Number),
-    cv.Required("options"): cv.ensure_list(cv.string),
-}).extend(cv.COMPONENT_SCHEMA)
-
-def timer_to_code(config):
-    # Deprecated path; unified to_code handles both speed/timer.
-    return to_code(config)
+# Unified select: handled via to_code above (speed or timer)
